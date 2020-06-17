@@ -1,5 +1,5 @@
 import { handleStatus } from "../ultils/promisse-helpers.js";
-import { partialize, compose } from "../ultils/operators.js";
+import { partialize, compose, pipe } from "../ultils/operators.js";
 
 const API = "http://localhost:3000/notas";
 
@@ -22,7 +22,7 @@ export const notasService = {
 
   sumItems(code) {
     const filterItems = partialize(filterItemsByCode, code);
-    const sumItems = compose(sumItemsValue, filterItems, getItemsFromNotes)
+    const sumItems = pipe(getItemsFromNotes, filterItems, sumItemsValue);
 
     return this.listAll().then(sumItems);
   },
