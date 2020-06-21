@@ -7,7 +7,7 @@ import {
   pipe,
   takeUntil,
 } from "./ultils/operators.js";
-import { timeoutPromise } from "./ultils/promisse-helpers.js";
+import { timeoutPromise, retry } from "./ultils/promisse-helpers.js";
 
 const operations = pipe(
   partialize(takeUntil, 3),
@@ -15,7 +15,7 @@ const operations = pipe(
 );
 
 const action = operations(() =>
-  timeoutPromise(200, service.sumItems("2143"))
+  retry(3, 3000, () => timeoutPromise(200, service.sumItems("2143")))
     .then(console.log)
     .catch(console.log)
 );

@@ -14,3 +14,17 @@ export const timeoutPromise = (milliseconds, promise) => {
   );
   return Promise.race([timeout, promise]);
 };
+
+export const delay = (milliseconds) => (data) => {
+  return new Promise((resolve, reject) =>
+    setTimeout(() => resolve(data), milliseconds)
+  );
+};
+
+export const retry = (retries, milliseconds, fn) =>
+  fn().catch((err) => {
+    console.log(retries);
+    return delay(milliseconds)().then(() =>
+      retries > 1 ? retry(retries - 1, milliseconds, fn) : Promise.reject(err)
+    );
+  });
